@@ -82,4 +82,4 @@ version = '3.0.0'
 
 # local packages
 [dependencies]
-member-set = { path = '../../traits/', default-features = false }
+core-services = { path = '../../traits/', default-features = false }

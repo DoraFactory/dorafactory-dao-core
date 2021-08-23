@@ -1,5 +1,5 @@
 [package]
-name = "member-set"
+name = "core-services"
 version = "3.0.0"
 edition = "2018"
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
@@ -14,11 +14,19 @@ git = 'https://github.com/paritytech/substrate.git'
 tag = 'monthly-2021-07'
 version = '3.0.0'
 
+[dependencies.frame-support]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = 'monthly-2021-07'
+version = '3.0.0'
+
+
 [features]
 default = ['std']
 std = [
     'sp-std/std',
     'sp-io/std',
+    'frame-support/std',
 ]
 
 [dev-dependencies.sp-io]

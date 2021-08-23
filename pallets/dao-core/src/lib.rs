@@ -13,6 +13,7 @@ use frame_support::{
 use sp_std::{vec, vec::Vec, convert::{TryInto}};
 use sp_std::boxed::Box;
 use sp_runtime::traits::{Hash, AccountIdConversion};
+use core_services::DoraUserOrigin;
 
 #[cfg(test)]
 mod mock;
@@ -44,6 +45,7 @@ pub struct AppInfo<AccountId, Balance> {
 type OrgnizationOf<T> = Orgnization<<T as frame_system::Config>::AccountId>;
 type BalanceOf<T> = <<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 type AppInfoOf<T, P> = AppInfo<<T as frame_system::Config>::AccountId, BalanceOf<P>>;
+pub const MAX_MEMBERS: usize = 16;
 
 
 #[frame_support::pallet]
@@ -114,6 +116,7 @@ pub mod pallet {
 		OrgnizationNotExist,
 		NotValidOrgMember,
 		AppNotFound,
+        BadOrigin,
 	}
 
 	#[pallet::hooks]
@@ -224,7 +227,7 @@ impl<T: Config> Pallet<T> {
 	/// This actually does computation. If you need to keep using it, then make sure you cache the
 	/// value and only call this once.
 	pub fn validate_member(account_id: T::AccountId, ord_id: u32) -> bool {
-		if !Orgnizations::<T>::contains_key(ord_id) {
+        if !Orgnizations::<T>::contains_key(ord_id) {
 			false
 		} else {
 			let members = Orgnizations::<T>::get(ord_id).members;
@@ -237,6 +240,7 @@ impl<T: Config> Pallet<T> {
 				}
 			}
 		}
+
 	}
 
 	pub fn charge(source: T::AccountId, value: BalanceOf<T>, app_id: u8) -> frame_support::dispatch::DispatchResultWithPostInfo {
@@ -249,5 +253,27 @@ impl<T: Config> Pallet<T> {
 		let _ = T::Currency::transfer(&source, &Self::account_id(app_id), value - tax, KeepAlive);
 		
 		Ok(().into())
+	}
+}
+
+impl<T: Config> DoraUserOrigin for Pallet<T> {
+	type AccountId = T::AccountId;
+    type AppId = u8;
+    type OrgId = u32;
+
+	fn ensure_signed(who: T::AccountId, org: u32, app: u8) -> frame_support::dispatch::DispatchResultWithPostInfo {
+        if !Orgnizations::<T>::contains_key(org) {
+			Err(Error::<T>::BadOrigin)?
+		} else {
+			let members = Orgnizations::<T>::get(org).members;
+			match members.binary_search(&who) {
+				Ok(_) => {
+					Ok(().into())
+				}
+				Err(_) => {
+                    Err(Error::<T>::BadOrigin)?
+				}
+			}
+		}
 	}
 }
