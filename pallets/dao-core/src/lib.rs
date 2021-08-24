@@ -13,7 +13,7 @@ use frame_support::{
 use sp_std::{vec, vec::Vec, convert::{TryInto}};
 use sp_std::boxed::Box;
 use sp_runtime::traits::{Hash, AccountIdConversion};
-use core_services::DoraUserOrigin;
+use core_services::{DoraUserOrigin, DoraPay};
 
 #[cfg(test)]
 mod mock;
@@ -115,6 +115,8 @@ pub mod pallet {
 		/// Errors should have helpful documentation associated with them.
 		OrgnizationNotExist,
 		NotValidOrgMember,
+        AppNotExist,
+        AppNotEnable,
 		AppNotFound,
         BadOrigin,
 	}
@@ -261,9 +263,12 @@ impl<T: Config> DoraUserOrigin for Pallet<T> {
     type AppId = u8;
     type OrgId = u32;
 
-	fn ensure_signed(who: T::AccountId, org: u32, app: u8) -> frame_support::dispatch::DispatchResultWithPostInfo {
+	fn ensure_valid(who: T::AccountId, org: u32, app: u8) -> frame_support::dispatch::DispatchResultWithPostInfo {
+        if !RegisteredApps::<T>::contains_key(app) {
+            Err(Error::<T>::AppNotExist)?
+        }
         if !Orgnizations::<T>::contains_key(org) {
-			Err(Error::<T>::BadOrigin)?
+			Err(Error::<T>::OrgnizationNotExist)?
 		} else {
 			let members = Orgnizations::<T>::get(org).members;
 			match members.binary_search(&who) {
@@ -271,9 +276,33 @@ impl<T: Config> DoraUserOrigin for Pallet<T> {
 					Ok(().into())
 				}
 				Err(_) => {
-                    Err(Error::<T>::BadOrigin)?
+                    Err(Error::<T>::NotValidOrgMember)?
 				}
 			}
 		}
 	}
+}
+
+impl<T: Config> DoraPay for Pallet<T> {
+    type AccountId = T::AccountId;
+    type Balance = BalanceOf<T>;
+    type AppId = u8;
+
+    fn charge(source: T::AccountId, value: BalanceOf<T>, app_id: u8) -> frame_support::dispatch::DispatchResultWithPostInfo {
+		let value_num = Self::balance_to_u128(value);
+		let tax_num = value_num.checked_mul(T::TaxInPercent::get().into()).unwrap().checked_div(100).unwrap();
+		let tax = Self::u128_to_balance(tax_num);
+		// charge tax
+		let _ = T::Currency::transfer(&source, &Self::account_id(0), tax, KeepAlive);
+		// process rest to App's escrow account
+		let _ = T::Currency::transfer(&source, &Self::account_id(app_id), value - tax, KeepAlive);
+		
+		Ok(().into())
+	}
+
+    /// withdraw from escrow account do not tax
+    fn withdraw(dest: T::AccountId, value: BalanceOf<T>, app_id: u8) -> frame_support::dispatch::DispatchResultWithPostInfo {
+        let _ = T::Currency::transfer(&Self::account_id(app_id), &dest, value, KeepAlive);
+        Ok(().into())
+    }
 }
