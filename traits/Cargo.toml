@@ -1,6 +1,6 @@
 [package]
 name = "core-services"
-version = "3.0.0"
+version = "0.1.0"
 edition = "2018"
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
 repository = 'https://github.com/substrate-developer-hub/recipes'
@@ -11,14 +11,14 @@ license = "GPL-3.0-or-later"
 [dev-dependencies.sp-std]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-07'
-version = '3.0.0'
+tag = 'monthly-2021-09+1'
+version = '4.0.0-dev'
 
 [dependencies.frame-support]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-07'
-version = '3.0.0'
+tag = 'monthly-2021-09+1'
+version = '4.0.0-dev'
 
 
 [features]
@@ -32,5 +32,5 @@ std = [
 [dev-dependencies.sp-io]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-07'
-version = '3.0.0'
+tag = 'monthly-2021-09+1'
+version = '4.0.0-dev'
