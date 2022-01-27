@@ -1,6 +1,6 @@
 [package]
 name = "core-services"
-version = "3.0.0"
+version = "4.0.0-dev"
 edition = "2018"
 authors = ["Substrate DevHub <https://github.com/substrate-developer-hub>"]
 repository = "https://github.com/substrate-developer-hub/recipes"
