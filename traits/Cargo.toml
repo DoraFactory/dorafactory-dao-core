@@ -1,36 +1,36 @@
 [package]
 name = "core-services"
-version = "0.1.0"
+version = "4.0.0-dev"
 edition = "2018"
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-repository = 'https://github.com/substrate-developer-hub/recipes'
+authors = ["Substrate DevHub <https://github.com/substrate-developer-hub>"]
+repository = "https://github.com/substrate-developer-hub/recipes"
 description = "A trait that supplies a set of accounts for use in a Substrate runtime"
 license = "GPL-3.0-or-later"
 
 
 [dev-dependencies.sp-std]
 default-features = false
-git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-09+1'
-version = '4.0.0-dev'
+git = "https://github.com/paritytech/substrate.git"
+tag = "monthly-2021-09+1"
+version = "4.0.0-dev"
 
 [dependencies.frame-support]
 default-features = false
-git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-09+1'
-version = '4.0.0-dev'
+git = "https://github.com/paritytech/substrate.git"
+tag = "monthly-2021-09+1"
+version = "4.0.0-dev"
 
 
 [features]
-default = ['std']
+default = ["std"]
 std = [
-    'sp-std/std',
-    'sp-io/std',
-    'frame-support/std',
+    "sp-std/std",
+    "sp-io/std",
+    "frame-support/std",
 ]
 
 [dev-dependencies.sp-io]
 default-features = false
-git = 'https://github.com/paritytech/substrate.git'
-tag = 'monthly-2021-09+1'
-version = '4.0.0-dev'
+git = "https://github.com/paritytech/substrate.git"
+tag = "monthly-2021-09+1"
+version = "4.0.0-dev"
