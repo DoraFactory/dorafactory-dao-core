@@ -82,4 +82,5 @@ version = "4.0.0-dev"
 
 # local packages
 [dependencies]
+scale-info = { version = "1.0", default-features = false, features = ["derive"] }
 core-services = { path = "../../traits/", default-features = false }
