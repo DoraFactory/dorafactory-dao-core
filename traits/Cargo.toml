@@ -7,19 +7,12 @@ repository = "https://github.com/substrate-developer-hub/recipes"
 description = "A trait that supplies a set of accounts for use in a Substrate runtime"
 license = "GPL-3.0-or-later"
 
+[dev-dependencies]
+sp-std = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.13" }
+sp-io = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.13" }
 
-[dev-dependencies.sp-std]
-default-features = false
-git = "https://github.com/paritytech/substrate.git"
-tag = "monthly-2021-09+1"
-version = "4.0.0-dev"
-
-[dependencies.frame-support]
-default-features = false
-git = "https://github.com/paritytech/substrate.git"
-tag = "monthly-2021-09+1"
-version = "4.0.0-dev"
-
+[dependencies]
+frame-support = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.13" }
 
 [features]
 default = ["std"]
@@ -28,9 +21,3 @@ std = [
     "sp-io/std",
     "frame-support/std",
 ]
-
-[dev-dependencies.sp-io]
-default-features = false
-git = "https://github.com/paritytech/substrate.git"
-tag = "monthly-2021-09+1"
-version = "4.0.0-dev"
