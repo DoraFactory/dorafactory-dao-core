@@ -12,9 +12,12 @@ use frame_support::{
 };
 pub use pallet::*;
 use scale_info::TypeInfo;
-use sp_runtime::traits::{AccountIdConversion, Hash};
+use sp_runtime::{
+    traits::{AccountIdConversion, Hash},
+    RuntimeDebug,
+};
 use sp_std::boxed::Box;
-use sp_std::{convert::TryInto, vec, vec::Vec};
+use sp_std::{convert::TryInto, vec::Vec};
 
 #[cfg(test)]
 mod mock;
@@ -24,7 +27,7 @@ mod tests;
 
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
-#[derive(Encode, Decode, Default, Clone, PartialEq, TypeInfo)]
+#[derive(Encode, Decode, Default, Clone, PartialEq, TypeInfo, RuntimeDebug)]
 pub struct Orgnization<AccountId> {
     pub org_type: u32,
     pub description: Vec<u8>,
@@ -32,7 +35,7 @@ pub struct Orgnization<AccountId> {
     pub members: Vec<AccountId>,
 }
 
-#[derive(Encode, Decode, Default, Clone, PartialEq, TypeInfo)]
+#[derive(Encode, Decode, Default, Clone, PartialEq, TypeInfo, RuntimeDebug)]
 pub struct AppInfo<AccountId, Balance> {
     pub title: Vec<u8>,
     pub owner: AccountId,
@@ -55,6 +58,7 @@ pub mod pallet {
 
     #[pallet::pallet]
     #[pallet::generate_store(pub(super) trait Store)]
+    #[pallet::without_storage_info]
     pub struct Pallet<T>(_);
 
     /// Configure the pallet by specifying the parameters and types on which it depends.
@@ -108,7 +112,7 @@ pub mod pallet {
     #[pallet::storage]
     #[pallet::getter(fn orgnizations)]
     pub(super) type Orgnizations<T: Config> =
-        StorageMap<_, Blake2_128Concat, u32, OrgnizationOf<T>, ValueQuery>;
+        StorageMap<_, Blake2_128Concat, u32, OrgnizationOf<T>, OptionQuery>;
 
     #[pallet::storage]
     #[pallet::getter(fn next_app_id)]
@@ -117,7 +121,7 @@ pub mod pallet {
     #[pallet::storage]
     #[pallet::getter(fn registered_apps)]
     pub(super) type RegisteredApps<T: Config> =
-        StorageMap<_, Blake2_128Concat, u8, AppInfoOf<T, T>, ValueQuery>;
+        StorageMap<_, Blake2_128Concat, u8, AppInfoOf<T, T>, OptionQuery>;
 
     #[pallet::hooks]
     impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {}
@@ -155,13 +159,13 @@ pub mod pallet {
                 Orgnizations::<T>::contains_key(&org_id),
                 Error::<T>::OrgnizationNotExist
             );
-            let members = Orgnizations::<T>::get(org_id).members;
+            let members = Orgnizations::<T>::get(org_id).unwrap().members;
             ensure!(
                 members.binary_search(&who).is_err(),
                 Error::<T>::NoRepeatJoin
             );
             Orgnizations::<T>::mutate(org_id, |org| {
-                org.members.push(who.clone());
+                org.clone().unwrap().members.push(who.clone());
             });
             Self::deposit_event(Event::OrgJoined(org_id, who));
             Ok(().into())
@@ -243,7 +247,7 @@ pub mod pallet {
             if !Orgnizations::<T>::contains_key(ord_id) {
                 false
             } else {
-                let members = Orgnizations::<T>::get(ord_id).members;
+                let members = Orgnizations::<T>::get(ord_id).unwrap().members;
                 match members.binary_search(&account_id) {
                     Ok(_) => true,
                     Err(_) => false,
@@ -289,7 +293,7 @@ pub mod pallet {
             if !Orgnizations::<T>::contains_key(org) {
                 Err(Error::<T>::OrgnizationNotExist)?
             } else {
-                let members = Orgnizations::<T>::get(org).members;
+                let members = Orgnizations::<T>::get(org).unwrap().members;
                 match members.binary_search(&who) {
                     Ok(_) => Ok(().into()),
                     Err(_) => Err(Error::<T>::NotValidOrgMember)?,
