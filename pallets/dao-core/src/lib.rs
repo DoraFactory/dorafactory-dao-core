@@ -4,18 +4,14 @@ use core_services::{DoraPay, DoraUserOrigin};
 use frame_support::{
     codec::{Decode, Encode},
     traits::{
-        Currency, ExistenceRequirement::KeepAlive, Get, OnUnbalanced, ReservableCurrency,
-        UnfilteredDispatchable,
+        Currency, ExistenceRequirement::KeepAlive, ReservableCurrency, UnfilteredDispatchable,
     },
     weights::GetDispatchInfo,
     PalletId,
 };
 pub use pallet::*;
 use scale_info::TypeInfo;
-use sp_runtime::{
-    traits::{AccountIdConversion, Hash},
-    RuntimeDebug,
-};
+use sp_runtime::{traits::AccountIdConversion, RuntimeDebug};
 use sp_std::boxed::Box;
 use sp_std::{convert::TryInto, vec::Vec};
 
