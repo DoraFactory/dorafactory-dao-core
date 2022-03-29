@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use core_services::{DoraPay, DoraUserOrigin};
+use dao_traits::{DoraPay, DoraUserOrigin};
 use frame_support::{
     codec::{Decode, Encode},
     traits::{
