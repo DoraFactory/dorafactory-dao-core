@@ -1,10 +1,10 @@
 [package]
-authors = ["Substrate DevHub <https://github.com/substrate-developer-hub>"]
+name = "dao-core"
 description = "FRAME pallet template for defining custom runtime logic."
+authors = ["Substrate DevHub <https://github.com/substrate-developer-hub>"]
 edition = "2018"
 homepage = "https://substrate.dev"
 license = "MIT"
-name = "pallet-dao-core"
 readme = "README.md"
 repository = "https://github.com/substrate-developer-hub/substrate-node-template/"
 version = "4.0.0-dev"
@@ -42,4 +42,4 @@ sp-std = { git = "https://github.com/paritytech/substrate", default-features = f
 sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
 
 # local packages
-core-services = { path = "../../traits/", default-features = false }
+dao-traits = { path = "../traits", default-features = false }
