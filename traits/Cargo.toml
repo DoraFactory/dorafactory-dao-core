@@ -1,11 +1,9 @@
 [package]
 name = "dao-traits"
-version = "4.0.0-dev"
-edition = "2018"
-authors = ["Dorafactory <https://github.com/substrate-developer-hub>"]
-repository = "https://github.com/DoraFactory/dorafactory-dao-core"
-description = "A trait that supplies a set of accounts for use in a Substrate runtime"
-license = "GPL-3.0-or-later"
+version = "0.1.0"
+authors = ["DoraFactory Developers <https://github.com/DoraFactory>"]
+description = "dao core traits support"
+edition = "2021"
 
 [dev-dependencies]
 sp-std = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.22" }
