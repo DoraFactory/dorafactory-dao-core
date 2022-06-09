@@ -1,6 +1,6 @@
 [package]
 name = "dao-traits"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["DoraFactory Developers <https://github.com/DoraFactory>"]
 description = "dao core traits support"
 edition = "2021"
