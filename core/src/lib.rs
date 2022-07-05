@@ -221,9 +221,9 @@ pub mod pallet {
     impl<T: Config> Pallet<T> {
         fn account_id(app_id: u8) -> T::AccountId {
             if app_id == 0 {
-                T::PalletId::get().into_account()
+                T::PalletId::get().into_account_truncating()
             } else {
-                T::PalletId::get().into_sub_account(app_id)
+                T::PalletId::get().into_sub_account_truncating(app_id)
             }
         }
 
