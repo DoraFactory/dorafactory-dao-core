@@ -126,7 +126,7 @@ pub mod pallet {
     impl<T: Config> Pallet<T> {
         /// An example dispatchable that takes a singles value as a parameter, writes the value to
         /// storage and emits an event. This function must be dispatched by a signed extrinsic.
-        #[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+        #[pallet::weight(Weight::from_ref_time(10_000) + T::DbWeight::get().writes(1 as u64))]
         pub fn create(origin: OriginFor<T>, description: Vec<u8>) -> DispatchResultWithPostInfo {
             // Check that the extrinsic was signed and get the signer.
             // This function will return an error if the extrinsic is not signed.
@@ -145,7 +145,7 @@ pub mod pallet {
             Ok(().into())
         }
 
-        #[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+        #[pallet::weight(Weight::from_ref_time(10_000) + T::DbWeight::get().writes(1))]
         pub fn join(origin: OriginFor<T>, org_id: u32) -> DispatchResultWithPostInfo {
             // Check that the extrinsic was signed and get the signer.
             // This function will return an error if the extrinsic is not signed.
@@ -167,7 +167,7 @@ pub mod pallet {
             Ok(().into())
         }
 
-        #[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+        #[pallet::weight(Weight::from_ref_time(10_000) + T::DbWeight::get().writes(1))]
         pub fn invoke(
             origin: OriginFor<T>,
             ord_id: u32,
@@ -182,7 +182,7 @@ pub mod pallet {
             Ok(().into())
         }
 
-        #[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+        #[pallet::weight(Weight::from_ref_time(10_000) + T::DbWeight::get().writes(1))]
         pub fn register_app(
             origin: OriginFor<T>,
             title: Vec<u8>,
@@ -206,7 +206,7 @@ pub mod pallet {
             Ok(().into())
         }
 
-        #[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+        #[pallet::weight(Weight::from_ref_time(10_000) + T::DbWeight::get().writes(1))]
         pub fn deregister_app(origin: OriginFor<T>, app_id: u8) -> DispatchResultWithPostInfo {
             let _ = T::SupervisorOrigin::ensure_origin(origin)?;
             ensure!(
